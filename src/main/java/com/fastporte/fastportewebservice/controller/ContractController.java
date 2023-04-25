@@ -210,10 +210,10 @@ public class ContractController {
             List<Contract> contracts = contractService.getAll();
             if (user.equals("client")) {
                 contracts.removeIf(contract -> !contract.getClient().getId().equals(id));
-                contracts.removeIf(contract -> contract.getNotification().getId().equals(1L));
+                contracts.removeIf(contract -> contract.getNotification().getId().equals(2L));
             } else if (user.equals("driver")) {
                 contracts.removeIf(contract -> !contract.getDriver().getId().equals(id));
-                contracts.removeIf(contract -> contract.getNotification().getId().equals(1L));
+                contracts.removeIf(contract -> contract.getNotification().getId().equals(2L));
             }
 
             if (contracts.size() > 0)
@@ -315,10 +315,10 @@ public class ContractController {
                 Contract contractUpdate = contract.get();
                 contractUpdate.setId(idContract);
 
-                if (contractUpdate.getNotification().getId() == 0) {
-                    notification = notificationService.getById(1L);
+                if (contractUpdate.getNotification().getId() == 1) {
+                    notification = notificationService.getById(2L);
                 } else {
-                    notification = notificationService.getById(0L);
+                    notification = notificationService.getById(1L);
                 }
 
                 contractUpdate.setNotification(notification.get());
@@ -340,13 +340,13 @@ public class ContractController {
 
         try {
             List<Contract> contracts = contractService.getAll();
-            Optional<Notification> notification = notificationService.getById(1L);
+            Optional<Notification> notification = notificationService.getById(2L);
             if (user.equals("client")) {
                 contracts.removeIf(contract -> !contract.getClient().getId().equals(id));
-                contracts.removeIf(contract -> contract.getNotification().getId().equals(1L));
+                contracts.removeIf(contract -> contract.getNotification().getId().equals(2L));
             } else if (user.equals("driver")) {
                 contracts.removeIf(contract -> !contract.getDriver().getId().equals(id));
-                contracts.removeIf(contract -> contract.getNotification().getId().equals(1L));
+                contracts.removeIf(contract -> contract.getNotification().getId().equals(2L));
             }
 
             if (contracts.size() > 0) {
