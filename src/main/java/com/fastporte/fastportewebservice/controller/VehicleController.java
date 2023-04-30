@@ -45,15 +45,13 @@ public class VehicleController {
         }
     }
 
-    @GetMapping(value = "/find/{category}/{quantity}",
+    @GetMapping(value = "/find/{category}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Vehicle>> findByType_cardQuantityCategory(
-            @PathVariable("category") String category,
-            @PathVariable("quantity") Long quantity) {
+            @PathVariable("category") String category) {
         try {
             List<Vehicle> vehicle = vehicleService.getAll();
             vehicle.removeIf(vehicle_ -> !vehicle_.getCategory().equals(category));
-            vehicle.removeIf(vehicle_ -> !vehicle_.getQuantity().equals(quantity));
             if (vehicle.size() > 0)
                 return new ResponseEntity<>(vehicle, HttpStatus.OK);
             else
