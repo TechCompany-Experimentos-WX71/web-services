@@ -1,7 +1,7 @@
 package com.fastporte.fastportewebservice.controller;
 
-import com.fastporte.fastportewebservice.entities.Client;
-import com.fastporte.fastportewebservice.service.IClientService;
+import com.fastporte.fastportewebservice.entities.*;
+import com.fastporte.fastportewebservice.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -21,10 +21,14 @@ import java.util.Optional;
 @Api(tags = "Client", value = "Web Service RESTful of Clients")
 public class ClientController {
     private final IClientService clientService;
+    private final IDriverService driverService;
 
-    public ClientController(IClientService clientService) {
+    public ClientController(IClientService clientService, IDriverService driverService) {
         this.clientService = clientService;
+        this.driverService = driverService;
+
     }
+
 
     // Retornar todos los clientes
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -79,8 +83,9 @@ public class ClientController {
     public ResponseEntity<Client> insertClient(@Valid @RequestBody Client client) {
         try {
             Client existingClient = clientService.findByEmail(client.getEmail());
+            Driver existingDriver = driverService.findByEmail(client.getEmail());
 
-            if (existingClient == null) {
+            if (existingClient == null && existingDriver == null) {
                 Client clientNew = clientService.save(client);
                 return ResponseEntity.status(HttpStatus.CREATED).body(clientNew);
 

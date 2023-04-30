@@ -1,7 +1,7 @@
 package com.fastporte.fastportewebservice.controller;
 
-import com.fastporte.fastportewebservice.entities.Driver;
-import com.fastporte.fastportewebservice.service.IDriverService;
+import com.fastporte.fastportewebservice.entities.*;
+import com.fastporte.fastportewebservice.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -21,9 +21,12 @@ import java.util.Optional;
 @Api(tags = "Driver", value = "Web Service RESTful of Drivers")
 public class DriverController {
     private final IDriverService driverService;
+    private final IClientService clientService;
 
-    public DriverController(IDriverService driverService) {
+    public DriverController(IDriverService driverService, IClientService clientService) {
+
         this.driverService = driverService;
+        this.clientService= clientService;
     }
 
     // Retornar todos los drivers
@@ -77,9 +80,9 @@ public class DriverController {
     })
     public ResponseEntity<Driver> insertDriver(@RequestBody Driver driver) {
         try {
-            Driver existingClient = driverService.findByEmail(driver.getEmail());
-
-            if (existingClient == null) {
+            Driver existingDriver = driverService.findByEmail(driver.getEmail());
+            Client existingClient = clientService.findByEmail(driver.getEmail());
+            if (existingDriver == null && existingClient == null) {
                 Driver clientNew = driverService.save(driver);
                 return ResponseEntity.status(HttpStatus.CREATED).body(clientNew);
 
