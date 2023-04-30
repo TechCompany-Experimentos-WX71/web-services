@@ -18,7 +18,7 @@ import java.util.Optional;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/drivers")
-@Api(tags="Driver", value="Web Service RESTful of Drivers")
+@Api(tags = "Driver", value = "Web Service RESTful of Drivers")
 public class DriverController {
     private final IDriverService driverService;
 
@@ -28,11 +28,11 @@ public class DriverController {
 
     // Retornar todos los drivers
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value="List of Drivers", notes="Method to list all drivers")
+    @ApiOperation(value = "List of Drivers", notes = "Method to list all drivers")
     @ApiResponses({
-            @ApiResponse(code=201, message="Drivers found"),
-            @ApiResponse(code=404, message="Drivers not found"),
-            @ApiResponse(code=501, message="Internal server error")
+            @ApiResponse(code = 201, message = "Drivers found"),
+            @ApiResponse(code = 404, message = "Drivers not found"),
+            @ApiResponse(code = 501, message = "Internal server error")
     })
     public ResponseEntity<List<Driver>> getAllDrivers() {
         try {
@@ -49,11 +49,11 @@ public class DriverController {
 
     // Retornar driver por id
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value="Driver by Id", notes="Method to find a driver by id")
+    @ApiOperation(value = "Driver by Id", notes = "Method to find a driver by id")
     @ApiResponses({
-            @ApiResponse(code=201, message="Driver found"),
-            @ApiResponse(code=404, message="Driver not found"),
-            @ApiResponse(code=501, message="Internal server error")
+            @ApiResponse(code = 201, message = "Driver found"),
+            @ApiResponse(code = 404, message = "Driver not found"),
+            @ApiResponse(code = 501, message = "Internal server error")
     })
     public ResponseEntity<Driver> findDriverById(@PathVariable("id") Long id) {
         try {
@@ -68,33 +68,39 @@ public class DriverController {
         }
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value="Create Driver", notes="Method to create a driver")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Create Driver", notes = "Method to create a driver")
     @ApiResponses({
-            @ApiResponse(code=201, message="Driver created"),
-            @ApiResponse(code=404, message="Driver not created"),
-            @ApiResponse(code=501, message="Internal server error")
+            @ApiResponse(code = 201, message = "Driver created"),
+            @ApiResponse(code = 404, message = "Driver not created"),
+            @ApiResponse(code = 501, message = "Internal server error")
     })
     public ResponseEntity<Driver> insertDriver(@RequestBody Driver driver) {
         try {
-            Driver driverNew = driverService.save(driver);
-            return ResponseEntity.status(HttpStatus.CREATED).body(driverNew);
+            Driver existingClient = driverService.findByEmail(driver.getEmail());
+
+            if (existingClient == null) {
+                Driver clientNew = driverService.save(driver);
+                return ResponseEntity.status(HttpStatus.CREATED).body(clientNew);
+
+            } else {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
         } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value="Update Driver", notes="Method to update a driver")
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Update Driver", notes = "Method to update a driver")
     @ApiResponses({
-            @ApiResponse(code=201, message="Driver updated"),
-            @ApiResponse(code=404, message="Driver not updated"),
-            @ApiResponse(code=501, message="Internal server error")
+            @ApiResponse(code = 201, message = "Driver updated"),
+            @ApiResponse(code = 404, message = "Driver not updated"),
+            @ApiResponse(code = 501, message = "Internal server error")
     })
     public ResponseEntity<Driver> updateDriver(@PathVariable("id") Long id,
-                                               @Valid @RequestBody Driver driver) {
+            @Valid @RequestBody Driver driver) {
         try {
             Optional<Driver> driverUpdate = driverService.getById(id);
             if (!driverUpdate.isPresent()) {
@@ -109,11 +115,11 @@ public class DriverController {
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value="Delete Driver", notes="Method to delete a driver")
+    @ApiOperation(value = "Delete Driver", notes = "Method to delete a driver")
     @ApiResponses({
-            @ApiResponse(code=201, message="Driver deleted"),
-            @ApiResponse(code=404, message="Driver not deleted"),
-            @ApiResponse(code=501, message="Internal server error")
+            @ApiResponse(code = 201, message = "Driver deleted"),
+            @ApiResponse(code = 404, message = "Driver not deleted"),
+            @ApiResponse(code = 501, message = "Internal server error")
     })
     public ResponseEntity<Driver> deleteDriver(@PathVariable("id") Long id) {
         try {
@@ -129,8 +135,7 @@ public class DriverController {
     }
 
     // Retornar driver por email y password [ POR VER ]
-    @GetMapping(value = "/searchEmailPassword/{email}/{password}",
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/searchEmailPassword/{email}/{password}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Driver> findDriverByEmailAndPassword(
             @PathVariable("email") String email,
             @PathVariable("password") String password) {
