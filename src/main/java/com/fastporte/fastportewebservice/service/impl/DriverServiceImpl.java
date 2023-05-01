@@ -45,4 +45,8 @@ public class DriverServiceImpl implements IDriverService {
     public Driver findByEmailAndPassword(String email, String password) {
         return driverRepository.findByEmailAndPassword(email, password);
     }
+    @Override
+    public Driver findByEmail(String email) {
+        return driverRepository.findByEmail(email);
+    }
 }
