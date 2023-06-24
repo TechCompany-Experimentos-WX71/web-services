@@ -116,7 +116,7 @@ public class CommentController {
                 comment.setClient(client.get());
                 comment.setDriver(driver.get());
                 Comment newComment = commentService.save(comment);
-                return new ResponseEntity<>(newComment, HttpStatus.CREATED);
+                return ResponseEntity.status(HttpStatus.CREATED).body(newComment);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
