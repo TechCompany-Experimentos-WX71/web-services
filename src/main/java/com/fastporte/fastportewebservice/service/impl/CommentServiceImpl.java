@@ -20,11 +20,13 @@ public class CommentServiceImpl implements ICommentService {
     }
 
     @Override
+    @Transactional
     public Comment save(Comment comment) throws Exception {
         return commentRepository.save(comment);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) throws Exception {
         commentRepository.deleteById(id);
     }
@@ -48,5 +50,6 @@ public class CommentServiceImpl implements ICommentService {
     public List<Comment> findByClientId(Long clientId) throws Exception {
         return commentRepository.findByClientId(clientId);
     }
+
 
 }
